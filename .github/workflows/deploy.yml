@@ -1,0 +1,35 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, staging]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install & Test
+        run: |
+          npm install
+          npm run lint
+          # npm test (dodaj kasnije)
+
+  deploy_staging:
+    needs: build_and_test
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Staging
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --confirm
+
+  deploy_production:
+    needs: build_and_test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Production
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm
