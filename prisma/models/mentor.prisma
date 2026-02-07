@@ -1,0 +1,8 @@
+model Mentor {
+  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String  @unique @db.Uuid
+  user       User    @relation(fields: [userId], references: [id])
+  bio        String
+  hourlyRate Decimal @db.Decimal(10, 2)
+  isApproved Boolean @default(false)
+}
