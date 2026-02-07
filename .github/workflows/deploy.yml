@@ -7,18 +7,34 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.DATABASE_URL_PROD || secrets.DATABASE_URL_STAGING }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install & Test
-        run: |
-          npm install
-          npm run lint
-          # npm test (dodaj kasnije)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Lint check
+        run: npm run lint
+
+      - name: Build check (To ensure TS and Next.js are OK)
+        run: npm run build
 
   deploy_staging:
     needs: build_and_test
     if: github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
+    environment: Staging
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Staging
@@ -28,7 +44,7 @@ jobs:
     needs: build_and_test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment: production
+    environment: Production
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Production
