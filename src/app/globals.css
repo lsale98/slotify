@@ -1,26 +1,99 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--blue-10);
+  --color-secondary: var(--blue-3);
+  --color-secondary-foreground: var(--blue-11);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-hover: var(--red-11);
+  --radius-md: var(--radius);
+
+  --font-primary: var(--font-poppins);
+  --font-secondary: var(--font-montserrat);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  :root,
+  .light {
+    --gray-1: #fcfcfc;
+    --gray-3: #f0f0f2;
+    --gray-6: #d8d8db;
+    --gray-9: #8b8d98;
+    --gray-11: #60626b;
+    --gray-12: #1c1c1f;
+    --blue-3: #e6f2ff;
+    --blue-9: #3d63dd;
+    --blue-11: #3451b2;
+    --red-destructive: #cd2b31;
+    --red-contrast: #ffffff;
+    --background: #f2f2f2;
+    --foreground: var(--gray-12);
+    --primary: var(--blue-9);
+    --primary-foreground: #ffffff;
+    --muted: var(--gray-3);
+    --muted-foreground: var(--gray-11);
+    --accent: var(--blue-3);
+    --accent-foreground: var(--blue-11);
+    --destructive: var(--red-destructive);
+    --destructive-foreground: var(--red-contrast);
+    --border: var(--gray-6);
+    --input: var(--gray-6);
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --gray-1: #111111;
+    --gray-3: #222222;
+    --gray-4: #2a2a2a;
+    --gray-11: #bcbec9;
+    --gray-12: #f2f2f2;
+    --blue-3: #16264c;
+    --blue-9: #3d63dd;
+    --blue-11: #8da4ef;
+    --red-destructive: #cd2b31;
+    --red-contrast: #ffffff;
+    --background: #111111;
+    --foreground: #f2f2f2;
+    --primary: var(--blue-9);
+    --primary-foreground: #ffffff;
+    --muted: var(--gray-3);
+    --muted-foreground: var(--gray-11);
+    --accent: var(--blue-3);
+    --accent-foreground: var(--blue-11);
+    --destructive: var(--red-destructive);
+    --destructive-foreground: var(--red-contrast);
+    --border: var(--gray-4);
+    --input: var(--gray-4);
+  }
+
+  @supports (color: color(display-p3 1 1 1)) {
+    @media (color-gamut: p3) {
+      :root,
+      .light,
+      .dark {
+        --blue-9: oklch(50.41% 0.201 263.43);
+        --gray-9: oklch(62.5% 0.012 270.5);
+        --red-destructive: oklch(52.2% 0.19 27.5);
+      }
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    border-color: var(--border);
+    font-family: var(--font-montserrat), sans-serif;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-montserrat), sans-serif;
+  }
 }
