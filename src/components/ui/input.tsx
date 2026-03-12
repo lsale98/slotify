@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 // ─── CVA Variants ─────────────────────────────────────────────────────────────
 
-export const inputVariants = cva(
+const inputVariants = cva(
   // Border živeo ovde pre — premešten na wrapper
   'flex h-9 w-full bg-transparent py-1 text-foreground text-xs shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
   {
@@ -30,7 +30,7 @@ export const inputVariants = cva(
 
 // Wrapper dobija border i focus-ring — jedino mesto za border
 export const inputWrapperVariants = cva(
-  'relative flex gap-1.5 items-center w-full rounded-md border transition-colors focus-within:ring-1 px-3',
+  'relative flex gap-1.5 items-center w-full rounded-md border transition-colors focus-within:ring-1',
   {
     variants: {
       variant: {
@@ -258,4 +258,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input';
 
-export { Input };
+export { Input, inputVariants };
