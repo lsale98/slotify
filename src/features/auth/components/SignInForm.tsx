@@ -1,0 +1,63 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Typography } from '@/components/ui/typography';
+import Link from 'next/link';
+import { useActionState } from 'react';
+import { signIn } from '../actions/sign-in.action';
+
+const initialState = { error: undefined };
+
+const SignInForm = () => {
+  const [state, formAction, isPending] = useActionState(signIn, initialState);
+  return (
+    <div className="flex w-full max-w-150 flex-col gap-6 rounded-2xl bg-white p-4 md:rounded-4xl md:p-8 lg:p-10">
+      <div className="flex flex-col gap-1">
+        <Typography element="h1" variant="h4">
+          Welcome Back!
+        </Typography>
+        <Typography>
+          Sign in to access your dashboard and countinue your career path.
+        </Typography>
+      </div>
+      <form action={formAction} className="flex flex-col gap-4">
+        {state?.error && (
+          <div
+            className="text-error-text bg-error-card rounded-md px-3 py-2 text-sm"
+            role="alert"
+            aria-live="polite"
+          >
+            {state.error}
+          </div>
+        )}
+        <Input
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="Enter your email"
+        />
+        <Input
+          name="password"
+          type="password"
+          label="Password"
+          placeholder="Enter your password"
+        />
+        <Button fullWidth className="mt-1" disabled={isPending}>
+          Sing in
+        </Button>
+      </form>
+      <Typography variant="small">
+        Don&apos;t have an account yet?{' '}
+        <Link
+          href="/sign-up"
+          className="text-primary font-medium hover:underline"
+        >
+          Create an Account
+        </Link>
+      </Typography>
+    </div>
+  );
+};
+
+export default SignInForm;

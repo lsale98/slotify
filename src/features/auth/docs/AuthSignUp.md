@@ -1,6 +1,6 @@
 # Auth — Sign Up
 
-## Overview
+## Overview - NOT COMPLETED AND NOT 100% TRUE
 
 Handles new user registration. During sign up, the user selects a role (**Mentor** or **User**), which determines the onboarding flow that follows after successful registration.
 

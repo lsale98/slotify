@@ -1,8 +1,13 @@
 model Mentor {
-  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId     String  @unique @db.Uuid
-  user       User    @relation(fields: [userId], references: [id])
-  bio        String
-  hourlyRate Decimal @db.Decimal(10, 2)
-  isApproved Boolean @default(false)
+  id          String   @id @default(cuid())
+  userId      String   @unique @map("user_id")
+  displayName String   @map("display_name")
+  bio         String?
+  expertise   String[]
+  hourlyRate  Decimal? @map("hourly_rate") @db.Decimal(10, 2)
+  isAvailable Boolean  @default(true) @map("is_available")
+  verified    Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("mentor_profiles")
 }

@@ -1,25 +1,51 @@
 model User {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email          String    @unique
-  hashedPassword String
-  role           Role      @default(USER)
-  sessions       Session[]
-  mentor         Mentor?
-  createdAt      DateTime  @default(now())
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  lastname      String
+  passwordHash  String   @map("password_hash")
+  role          Role     @default(USER)
+  status        Status   @default(PENDING)
+  emailVerified Boolean  @default(false) @map("email_verified")
+  avatarUrl     String?  @map("avatar_url")
+  agreedTerms   Boolean  @default(true) @map("agreed_terms")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  sessions      Session[]
+  mentorProfile Mentor?
+
+  @@index([id, email])
+  @@map("users")
 }
 
 model Session {
   id         String   @id
-  userId     String   @db.Uuid
-  user       User     @relation(references: [id], fields: [userId], onDelete: Cascade)
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  userId     String   @map("user_id")
+  expiresAt  DateTime @map("expires_at")
+  userAgent  String?  @map("user_agent")
+  ipAddress  String?  @map("ip_address")
+  deviceName String?  @map("device_name")
+  lastUsedAt DateTime @default(now()) @map("last_used_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
 }
 
 enum Role {
-  USER
-  ADMIN
   SUPERADMIN
+  ADMIN
+  SUPPORT
   MENTOR
+  USER
+}
+
+enum Status {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  INACTIVE
 }
