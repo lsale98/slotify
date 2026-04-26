@@ -35,7 +35,7 @@ const SignInForm = () => {
           name="email"
           label="Email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="john.doe@gmail.com"
         />
         <Input
           name="password"
@@ -43,8 +43,16 @@ const SignInForm = () => {
           label="Password"
           placeholder="Enter your password"
         />
+        <Typography variant="small" className="ml-auto">
+          <Link
+            href="/forgot-password"
+            className="text-primary font-medium hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </Typography>
         <Button fullWidth className="mt-1" disabled={isPending}>
-          Sing in
+          Sign in
         </Button>
       </form>
       <Typography variant="small">

@@ -1,3 +1,4 @@
+import { Role } from '@/core/entities/models/user';
 import { getClaims } from '@/lib/getClaims';
 import { redirect } from 'next/navigation';
 
@@ -11,5 +12,13 @@ export default async function DashboardLayout({
   const claims = await getClaims();
   if (!claims) redirect('/sign-in');
 
-  return <>{claims.role === 'SUPERADMIN' ? superadmin : user}</>;
+  const ROLE_VIEWS: Record<Role, React.ReactNode> = {
+    SUPERADMIN: superadmin,
+    ADMIN: null,
+    SUPPORT: null,
+    MENTOR: null,
+    USER: user,
+  };
+
+  return <>{ROLE_VIEWS[claims.role as Role] || user}</>;
 }

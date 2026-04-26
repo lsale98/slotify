@@ -3,7 +3,13 @@ import { validateSession } from '@/lib/auth/validate-session';
 import { SESSION_COOKIE } from '../config';
 import { signClaims } from './lib/headerSigning';
 
-const AUTH_ROUTES = ['/sign-in', '/sign-up'];
+const AUTH_ROUTES = [
+  '/sign-in',
+  '/sign-up',
+  '/activate',
+  '/forgot-password',
+  '/reset-password',
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

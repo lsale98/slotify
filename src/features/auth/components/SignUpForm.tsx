@@ -7,11 +7,17 @@ import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
 import { signUp } from '../actions/sign-up.action';
 import { useActionState } from 'react';
+import { RadioGroup } from '@/components/ui/radio';
+import { RoleSchema } from '@/core/entities/models/user';
 
 const initialState = { error: undefined };
 
 const SignUpForm = () => {
   const [state, formAction, isPending] = useActionState(signUp, initialState);
+
+  const allowedRoles = RoleSchema.options.filter(
+    (role) => role === 'USER' || role === 'MENTOR',
+  );
   return (
     <div className="flex w-full max-w-150 flex-col gap-6 rounded-2xl bg-white p-4 md:rounded-4xl md:p-8 lg:p-10">
       <div className="flex flex-col gap-1">
@@ -29,17 +35,19 @@ const SignUpForm = () => {
             {state.error}
           </div>
         )}
-        <Input name="name" label="Name" placeholder="Enter your name" />
-        <Input
-          name="lastname"
-          label="Lastname"
-          placeholder="Enter your lastname"
-        />
+        <RadioGroup name="role" defaultValue={RoleSchema.enum.USER}>
+          <RadioGroup.Item value={RoleSchema.enum.USER}>User</RadioGroup.Item>
+          <RadioGroup.Item value={RoleSchema.enum.MENTOR}>
+            Mentor
+          </RadioGroup.Item>
+        </RadioGroup>
+        <Input name="name" label="Name" placeholder="John" />
+        <Input name="lastname" label="Lastname" placeholder="Doe" />
         <Input
           name="email"
           label="Email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="john.doe@gmail.com"
         />
         <Input
           name="password"
@@ -55,7 +63,7 @@ const SignUpForm = () => {
         />
         <Checkbox name="agreedTerms" label="Agreed to terms & conditions" />
         <Button fullWidth className="mt-1" disabled={isPending}>
-          Sing in
+          Sign up
         </Button>
       </form>
       <Typography variant="small">

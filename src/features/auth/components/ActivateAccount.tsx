@@ -17,7 +17,7 @@ const ActivateAccount = ({ activationToken }: { activationToken: string }) => {
 
   return (
     <form action={formAction}>
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-4">
         <div className="grid gap-2">
           {state.error && <p className="text-destructive">{state.error}</p>}
           <Input type="hidden" name="token" value={activationToken} />
@@ -29,9 +29,10 @@ const ActivateAccount = ({ activationToken }: { activationToken: string }) => {
           type="submit"
           variant="primary"
           disabled={isPending}
-          className="w-full"
+          fullWidth
+          className="mt-1"
         >
-          {isPending ? <Loader className="animate-spin" /> : 'Activate Account'}
+          {isPending ? <Loader className="animate-spin" /> : 'Activate account'}
         </Button>
       </div>
     </form>

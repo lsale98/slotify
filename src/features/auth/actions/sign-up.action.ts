@@ -2,6 +2,7 @@
 
 import { AuthenticationError } from '@/core/entities/errors/auth';
 import { InputParseError } from '@/core/entities/errors/common';
+import { Role } from '@/core/entities/models/user';
 import { getInjection } from '@/di/container';
 import { redirect } from 'next/navigation';
 
@@ -14,6 +15,7 @@ export async function signUp(
     'signUp',
     { recordResponse: true },
     async () => {
+      const role = formData.get('role') as Role;
       const email = formData.get('email')?.toString();
       const name = formData.get('name')?.toString();
       const lastname = formData.get('lastname')?.toString();
@@ -30,7 +32,7 @@ export async function signUp(
           lastname,
           password,
           confirm_password: confirmPassword,
-          role: 'USER',
+          role: role,
           status: 'PENDING',
           agreed_terms: true,
         });
