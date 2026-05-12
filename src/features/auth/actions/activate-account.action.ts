@@ -28,8 +28,7 @@ export async function activateAccount(
       } catch (err) {
         if (err instanceof InputParseError) {
           return {
-            error:
-              'Invalid data. Make sure the Password and Confirm Password match.',
+            error: 'Activation code not valid',
           };
         }
         if (err instanceof AuthenticationError) {

@@ -9,15 +9,23 @@ import { signUp } from '../actions/sign-up.action';
 import { useActionState } from 'react';
 import { RadioGroup } from '@/components/ui/radio';
 import { RoleSchema } from '@/core/entities/models/user';
+import { useFormFields } from '@/hooks/useFormFields';
 
 const initialState = { error: undefined };
 
 const SignUpForm = () => {
   const [state, formAction, isPending] = useActionState(signUp, initialState);
 
-  const allowedRoles = RoleSchema.options.filter(
-    (role) => role === 'USER' || role === 'MENTOR',
-  );
+  const { fields, handleChange } = useFormFields({
+    role: RoleSchema.enum.USER,
+    name: '',
+    lastname: '',
+    email: '',
+    password: '',
+    confirm_password: '',
+    agreed_terms: false,
+  });
+
   return (
     <div className="flex w-full max-w-150 flex-col gap-6 rounded-2xl bg-white p-4 md:rounded-4xl md:p-8 lg:p-10">
       <div className="flex flex-col gap-1">
@@ -28,41 +36,80 @@ const SignUpForm = () => {
       <form action={formAction} className="flex flex-col gap-4">
         {state?.error && (
           <div
-            className="text-error-text bg-error-card rounded-md px-3 py-2 text-sm"
+            className="text-destructive text-sm"
             role="alert"
             aria-live="polite"
           >
             {state.error}
           </div>
         )}
-        <RadioGroup name="role" defaultValue={RoleSchema.enum.USER}>
+        <RadioGroup
+          name="role"
+          defaultValue={RoleSchema.enum.USER}
+          {...({
+            value: fields.role,
+            onValueChange: handleChange('role'),
+          } as object)}
+        >
           <RadioGroup.Item value={RoleSchema.enum.USER}>User</RadioGroup.Item>
           <RadioGroup.Item value={RoleSchema.enum.MENTOR}>
             Mentor
           </RadioGroup.Item>
         </RadioGroup>
-        <Input name="name" label="Name" placeholder="John" />
-        <Input name="lastname" label="Lastname" placeholder="Doe" />
+        <Input
+          name="name"
+          label="Name"
+          placeholder="John"
+          value={fields.name}
+          onChange={(e) => handleChange('name')(e.target.value)}
+        />
+
+        <Input
+          name="lastname"
+          label="Lastname"
+          placeholder="Doe"
+          value={fields.lastname}
+          onChange={(e) => handleChange('lastname')(e.target.value)}
+        />
+
         <Input
           name="email"
           label="Email"
           type="email"
           placeholder="john.doe@gmail.com"
+          value={fields.email}
+          onChange={(e) => handleChange('email')(e.target.value)}
         />
+
         <Input
           name="password"
           type="password"
           label="Password"
           placeholder="Enter your password"
+          value={fields.password}
+          onChange={(e) => handleChange('password')(e.target.value)}
         />
+
         <Input
           name="confirm_password"
           type="password"
           label="Confirm Password"
           placeholder="Enter your confirm password"
+          value={fields.confirm_password}
+          onChange={(e) => handleChange('confirm_password')(e.target.value)}
         />
-        <Checkbox name="agreedTerms" label="Agreed to terms & conditions" />
-        <Button fullWidth className="mt-1" disabled={isPending}>
+
+        <Checkbox
+          name="agreedTerms"
+          label="Agreed to terms & conditions"
+          checked={fields.agreed_terms}
+          onCheckedChange={handleChange('agreed_terms')}
+        />
+        <Button
+          fullWidth
+          className="mt-1"
+          disabled={isPending || !fields.agreed_terms}
+        >
           Sign up
         </Button>
       </form>

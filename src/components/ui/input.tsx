@@ -154,6 +154,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             inputWrapperVariants({ variant: resolvedVariant }),
             disabled && 'cursor-not-allowed opacity-50',
+            type === 'hidden' && 'hidden',
           )}
         >
           {leftAddon && (

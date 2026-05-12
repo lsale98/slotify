@@ -16,7 +16,11 @@ export interface IAuthenticationService {
     sessionId: AppSession['id'],
   ): Promise<{ blankCookie: Cookie }>;
   storeActivationToken(userId: string): Promise<{ token: string; otp: string }>;
+  storeResetPasswordToken(userId: string): Promise<{ token: string }>;
   validateActivationToken(
     token: string,
   ): Promise<{ userId: User['id']; otp: string } | null>;
+  validateResetPasswordToken(
+    token: string,
+  ): Promise<{ userId: User['id'] } | null>;
 }

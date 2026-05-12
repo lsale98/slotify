@@ -48,6 +48,7 @@ export class MockAuthenticationService implements IAuthenticationService {
 
   private _activationTokens: Map<string, { userId: string; otp: string }> =
     new Map();
+  private _resetPasswordTokens: Map<string, { userId: string }> = new Map();
 
   async validatePasswords(
     inputPassword: string,
@@ -122,6 +123,14 @@ export class MockAuthenticationService implements IAuthenticationService {
     return { token, otp };
   }
 
+  async storeResetPasswordToken(userId: string): Promise<{ token: string }> {
+    const token = `mock-token-reset-password-${userId}`;
+
+    this._resetPasswordTokens.set(token, { userId });
+
+    return { token };
+  }
+
   async validateActivationToken(
     token: string,
   ): Promise<{ userId: User['id']; otp: string } | null> {
@@ -132,9 +141,20 @@ export class MockAuthenticationService implements IAuthenticationService {
     return result;
   }
 
+  async validateResetPasswordToken(
+    token: string,
+  ): Promise<{ userId: User['id'] } | null> {
+    const result = this._resetPasswordTokens.get(token);
+    if (!result) return null;
+
+    this._resetPasswordTokens.delete(token);
+    return result;
+  }
+
   _reset(): void {
     this._sessions = new Map([[MOCK_SESSION.id, MOCK_SESSION]]);
     this._activationTokens = new Map();
+    this._resetPasswordTokens = new Map();
   }
 
   _getSessions(): Map<string, AppSession> {
@@ -147,5 +167,9 @@ export class MockAuthenticationService implements IAuthenticationService {
 
   _getActivationTokens(): Map<string, { userId: string; otp: string }> {
     return this._activationTokens;
+  }
+
+  _getResetPasswordTokens(): Map<string, { userId: string }> {
+    return this._resetPasswordTokens;
   }
 }

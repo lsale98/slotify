@@ -26,7 +26,7 @@ export class ResendService implements IResendService {
       { name: 'ResendService > sendEmail', op: 'function' },
       async () => {
         try {
-          const { data, error } = await this.resend.emails.send({
+          const { error } = await this.resend.emails.send({
             from: 'Slotify <onboarding@resend.dev>',
             to,
             subject,
@@ -38,10 +38,8 @@ export class ResendService implements IResendService {
             return false;
           }
 
-          console.log('Email sent successfully:', data?.id);
           return true;
-        } catch (error) {
-          console.error('Email sending failed:', error);
+        } catch (_) {
           return false;
         }
       },

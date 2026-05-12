@@ -10,6 +10,10 @@ import { signUpUseCase } from '@/core/application/use-cases/auth/sign-up.use-cas
 import { signUpController } from '@/core/interface-adapters/controllers/auth/sign-up.controller';
 import { activateAccountUseCase } from '@/core/application/use-cases/auth/activate-account.use-case';
 import { activateAccountController } from '@/core/interface-adapters/controllers/auth/activate-account.controller';
+import { forgotPasswordUseCase } from '@/core/application/use-cases/auth/forgot-password.use-case';
+import { forgotPasswordController } from '@/core/interface-adapters/controllers/auth/forget-password.controller';
+import { resetPasswordUseCase } from '@/core/application/use-cases/auth/reset-password.use-case';
+import { resetPasswordController } from '@/core/interface-adapters/controllers/auth/reset-password.controller';
 
 export function createAuthenticationModule() {
   const authenticationModule = createModule();
@@ -63,6 +67,23 @@ export function createAuthenticationModule() {
     ]);
 
   authenticationModule
+    .bind(DI_SYMBOLS.IForgotPasswordUseCase)
+    .toHigherOrderFunction(forgotPasswordUseCase, [
+      DI_SYMBOLS.IInstrumentationService,
+      DI_SYMBOLS.IAuthenticationService,
+      DI_SYMBOLS.IUsersRepository,
+      DI_SYMBOLS.IResendService,
+    ]);
+
+  authenticationModule
+    .bind(DI_SYMBOLS.IResetPasswordUseCase)
+    .toHigherOrderFunction(resetPasswordUseCase, [
+      DI_SYMBOLS.IInstrumentationService,
+      DI_SYMBOLS.IAuthenticationService,
+      DI_SYMBOLS.IUsersRepository,
+    ]);
+
+  authenticationModule
     .bind(DI_SYMBOLS.ISignInController)
     .toHigherOrderFunction(signInController, [
       DI_SYMBOLS.IInstrumentationService,
@@ -89,6 +110,20 @@ export function createAuthenticationModule() {
     .toHigherOrderFunction(activateAccountController, [
       DI_SYMBOLS.IInstrumentationService,
       DI_SYMBOLS.IActivateAccountUseCase,
+    ]);
+
+  authenticationModule
+    .bind(DI_SYMBOLS.IForgotPasswordController)
+    .toHigherOrderFunction(forgotPasswordController, [
+      DI_SYMBOLS.IInstrumentationService,
+      DI_SYMBOLS.IForgotPasswordUseCase,
+    ]);
+
+  authenticationModule
+    .bind(DI_SYMBOLS.IResetPasswordController)
+    .toHigherOrderFunction(resetPasswordController, [
+      DI_SYMBOLS.IInstrumentationService,
+      DI_SYMBOLS.IResetPasswordUseCase,
     ]);
 
   return authenticationModule;

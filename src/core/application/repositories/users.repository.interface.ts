@@ -6,4 +6,5 @@ export interface IUsersRepository {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(input: CreateUser, tx?: ITransaction): Promise<User>;
   activateUserAccount(token: string, otp: string): Promise<User | undefined>;
+  updatePassword(userId: string, newPassword: string): Promise<void>;
 }

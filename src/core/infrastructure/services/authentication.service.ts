@@ -16,6 +16,10 @@ import type { AppSession } from '@/core/entities/models/session';
 import type { User } from '@/core/entities/models/user';
 import { generateOTP } from '@/lib/generateOTP';
 import { SESSION_COOKIE, SESSION_TTL_SECONDS } from '../../../../config';
+
+const ACTIVATION_TOKEN_TTL_SECONDS = 3600;
+const RESET_PASSWORD_TOKEN_TTL_SECONDS = 900;
+
 export class AuthenticationService implements IAuthenticationService {
   constructor(
     private readonly _instrumentationService: IInstrumentationService,
@@ -185,10 +189,30 @@ export class AuthenticationService implements IAuthenticationService {
         await this._redisService.setToken(
           `activation:${token}`,
           JSON.stringify({ userId, otp }),
-          3600,
+          ACTIVATION_TOKEN_TTL_SECONDS,
         );
 
         return { token, otp };
+      },
+    );
+  }
+
+  async storeResetPasswordToken(userId: string): Promise<{ token: string }> {
+    return this._instrumentationService.startSpan(
+      {
+        name: 'AuthenticationService > storeResetPasswordToken',
+        op: 'function',
+      },
+      async () => {
+        const token = crypto.randomUUID();
+
+        await this._redisService.setToken(
+          `reset_password:${token}`,
+          JSON.stringify({ userId }),
+          RESET_PASSWORD_TOKEN_TTL_SECONDS,
+        );
+
+        return { token };
       },
     );
   }
@@ -212,6 +236,28 @@ export class AuthenticationService implements IAuthenticationService {
         await this._redisService.deleteToken(`activation:${token}`);
 
         return { userId: result.userId, otp: result.otp };
+      },
+    );
+  }
+
+  async validateResetPasswordToken(
+    token: string,
+  ): Promise<{ userId: User['id'] } | null> {
+    return this._instrumentationService.startSpan(
+      {
+        name: 'AuthenticationService > validateResetPasswordToken',
+        op: 'function',
+      },
+      async () => {
+        const result = await this._redisService.getToken<{
+          userId: string;
+        }>(`reset_password:${token}`);
+
+        if (!result?.userId) return null;
+
+        await this._redisService.deleteToken(`reset_password:${token}`);
+
+        return { userId: result.userId };
       },
     );
   }

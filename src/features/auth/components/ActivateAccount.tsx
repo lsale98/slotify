@@ -18,9 +18,22 @@ const ActivateAccount = ({ activationToken }: { activationToken: string }) => {
   return (
     <form action={formAction}>
       <div className="flex flex-col items-center gap-4">
-        <div className="grid gap-2">
-          {state.error && <p className="text-destructive">{state.error}</p>}
-          <Input type="hidden" name="token" value={activationToken} />
+        <div>
+          {state?.error && (
+            <div
+              className="text-destructive text-sm"
+              role="alert"
+              aria-live="polite"
+            >
+              {state.error}
+            </div>
+          )}
+          <Input
+            type="hidden"
+            name="token"
+            className="mt-2"
+            value={activationToken}
+          />
         </div>
         <div className="grid gap-2">
           <OtpValidateForm />

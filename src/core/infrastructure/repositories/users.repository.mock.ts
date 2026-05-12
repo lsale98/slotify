@@ -6,14 +6,14 @@ export const MOCK_USER: User = {
   email: 'test@example.com',
   name: 'Test',
   lastname: 'User',
-  passwordHash: 'hashed-password',
+  password_hash: 'hashed-password',
   role: 'USER',
   status: 'ACTIVE',
-  emailVerified: false,
-  avatarUrl: null,
-  agreedTerms: true,
-  createdAt: new Date('2024-01-01'),
-  updatedAt: new Date('2024-01-01'),
+  email_verified: false,
+  avatar_url: null,
+  agreed_terms: true,
+  created_at: new Date('2024-01-01'),
+  updated_at: new Date('2024-01-01'),
 };
 
 export const MOCK_PENDING_USER: User = {
@@ -47,14 +47,14 @@ export class MockUsersRepository implements IUsersRepository {
       email: input.email,
       name: input.name,
       lastname: input.lastname,
-      passwordHash: 'hashed-' + input.password,
+      password_hash: 'hashed-' + input.password,
       role: input.role ?? 'USER',
       status: input.status ?? 'PENDING',
-      emailVerified: false,
-      avatarUrl: null,
-      agreedTerms: input.agreedTerms ?? true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      email_verified: false,
+      avatar_url: null,
+      agreed_terms: input.agreed_terms ?? true,
+      created_at: new Date(),
+      updated_at: new Date(),
     };
 
     this._users.push(user);
@@ -68,7 +68,7 @@ export class MockUsersRepository implements IUsersRepository {
     this._users[index] = {
       ...this._users[index],
       status,
-      updatedAt: new Date(),
+      updated_at: new Date(),
     };
     return this._users[index];
   }
@@ -81,6 +81,17 @@ export class MockUsersRepository implements IUsersRepository {
     if (!user) return undefined;
 
     return this.updateStatus(user.id, 'ACTIVE');
+  }
+
+  async updatePassword(userId: string, newPassword: string): Promise<void> {
+    const index = this._users.findIndex((u) => u.id === userId);
+    if (index === -1) throw new Error(`User ${userId} not found`);
+
+    this._users[index] = {
+      ...this._users[index],
+      password_hash: 'hashed-' + newPassword,
+      updated_at: new Date(),
+    };
   }
 
   _reset(): void {

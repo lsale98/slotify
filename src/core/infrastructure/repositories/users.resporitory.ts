@@ -155,4 +155,34 @@ export class UsersRepository implements IUsersRepository {
       },
     );
   }
+
+  async updatePassword(userId: string, newPassword: string): Promise<void> {
+    return this.instrumentationService.startSpan(
+      { name: 'UsersRepository > updatePassword' },
+      async () => {
+        try {
+          const newHashedPassword = await this.instrumentationService.startSpan(
+            { name: 'hash new password', op: 'function' },
+            () => hash(newPassword),
+          );
+
+          await this.instrumentationService.startSpan(
+            {
+              name: 'UPDATE users SET password_hash = $1 WHERE id = $2',
+              op: 'db.query',
+              attributes: { 'db.system': 'postgres' },
+            },
+            () =>
+              prisma.user.update({
+                where: { id: userId },
+                data: { passwordHash: newHashedPassword },
+              }),
+          );
+        } catch (err) {
+          this.crashReporterService.report(err);
+          throw err;
+        }
+      },
+    );
+  }
 }

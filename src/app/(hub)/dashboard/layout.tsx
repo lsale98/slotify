@@ -4,9 +4,11 @@ import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({
   superadmin,
+  mentor,
   user,
 }: {
   superadmin: React.ReactNode;
+  mentor: React.ReactNode;
   user: React.ReactNode;
 }) {
   const claims = await getClaims();
@@ -16,7 +18,7 @@ export default async function DashboardLayout({
     SUPERADMIN: superadmin,
     ADMIN: null,
     SUPPORT: null,
-    MENTOR: null,
+    MENTOR: mentor,
     USER: user,
   };
 
