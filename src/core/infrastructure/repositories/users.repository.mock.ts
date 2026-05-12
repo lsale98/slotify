@@ -6,14 +6,14 @@ export const MOCK_USER: User = {
   email: 'test@example.com',
   name: 'Test',
   lastname: 'User',
-  password_hash: 'hashed-password',
+  passwordHash: 'hashed-password',
   role: 'USER',
   status: 'ACTIVE',
-  email_verified: false,
-  avatar_url: null,
-  agreed_terms: true,
-  created_at: new Date('2024-01-01'),
-  updated_at: new Date('2024-01-01'),
+  emailVerified: false,
+  avatarUrl: null,
+  agreedTerms: true,
+  createdAt: new Date('2024-01-01'),
+  updatedAt: new Date('2024-01-01'),
 };
 
 export const MOCK_PENDING_USER: User = {
@@ -47,14 +47,14 @@ export class MockUsersRepository implements IUsersRepository {
       email: input.email,
       name: input.name,
       lastname: input.lastname,
-      password_hash: 'hashed-' + input.password,
+      passwordHash: 'hashed-' + input.password,
       role: input.role ?? 'USER',
       status: input.status ?? 'PENDING',
-      email_verified: false,
-      avatar_url: null,
-      agreed_terms: input.agreed_terms ?? true,
-      created_at: new Date(),
-      updated_at: new Date(),
+      emailVerified: false,
+      avatarUrl: null,
+      agreedTerms: input.agreedTerms ?? true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     this._users.push(user);
@@ -68,7 +68,7 @@ export class MockUsersRepository implements IUsersRepository {
     this._users[index] = {
       ...this._users[index],
       status,
-      updated_at: new Date(),
+      updatedAt: new Date(),
     };
     return this._users[index];
   }
@@ -89,8 +89,8 @@ export class MockUsersRepository implements IUsersRepository {
 
     this._users[index] = {
       ...this._users[index],
-      password_hash: 'hashed-' + newPassword,
-      updated_at: new Date(),
+      passwordHash: 'hashed-' + newPassword,
+      updatedAt: new Date(),
     };
   }
 

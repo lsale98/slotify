@@ -44,7 +44,7 @@ export const signUpUseCase =
           password: input.password,
           role: input.role,
           status: input.status,
-          agreed_terms: input.agreed_terms,
+          agreedTerms: input.agreed_terms,
         });
 
         const activationToken =
