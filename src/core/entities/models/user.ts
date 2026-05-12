@@ -16,18 +16,18 @@ export const StatusSchema = z.enum([
 ]);
 
 export const UserSchema = z.object({
-  id: z.string().cuid(),
-  email: z.string().email(),
+  id: z.cuid(),
+  email: z.email(),
   name: z.string(),
   lastname: z.string(),
-  password_hash: z.string(),
+  passwordHash: z.string(),
   role: RoleSchema.default('USER'),
   status: StatusSchema.default('PENDING'),
-  email_verified: z.boolean().default(false),
-  avatar_url: z.url().nullable(),
-  agreed_terms: z.boolean().default(true),
-  created_at: z.date(),
-  updated_at: z.date(),
+  emailVerified: z.boolean().default(false),
+  avatarUrl: z.url().nullable(),
+  agreedTerms: z.boolean().default(true),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export const createUserSchema = UserSchema.pick({
@@ -37,7 +37,7 @@ export const createUserSchema = UserSchema.pick({
   lastname: true,
   role: true,
   status: true,
-  agreed_terms: true,
+  agreedTerms: true,
 }).extend({ password: z.string().min(6).max(20) });
 
 export type CreateUser = z.infer<typeof createUserSchema>;
