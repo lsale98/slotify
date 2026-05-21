@@ -1,5 +1,3 @@
-// src/core/infrastructure/services/transaction-manager.service.ts
-
 import { prisma } from '@/lib/prisma';
 import type { ITransactionManagerService } from '@/core/application/services/transaction-manager.service.interface';
 import type { PrismaClient } from '@/generated/prisma';

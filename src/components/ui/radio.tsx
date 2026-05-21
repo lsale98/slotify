@@ -144,7 +144,7 @@ function RadioGroupItem({
           className={cn(
             'group flex cursor-pointer items-start gap-2 select-none',
             isCard && [
-              'rounded-xl border border-neutral-200 bg-white px-4 py-3',
+              'rounded-xl border border-neutral-200 bg-white p-3',
               'transition-all duration-150',
               'hover:border-neutral-400 hover:shadow-sm',
               'has-data-[state=checked]:border-primary',

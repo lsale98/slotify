@@ -1,5 +1,3 @@
-// src/core/infrastructure/services/authentication.service.ts
-
 import { verify } from '@node-rs/argon2';
 import crypto from 'crypto';
 

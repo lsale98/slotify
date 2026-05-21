@@ -13,6 +13,8 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-hover: var(--red-11);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-green: var(--green);
   --radius-md: var(--radius);
 
   --font-primary: var(--font-poppins);
@@ -31,6 +33,7 @@
     --blue-3: #e6f2ff;
     --blue-9: #3d63dd;
     --blue-11: #3451b2;
+    --green: #228b22;
     --red-destructive: #cd2b31;
     --red-contrast: #ffffff;
     --background: #f2f2f2;
@@ -57,6 +60,7 @@
     --blue-3: #16264c;
     --blue-9: #3d63dd;
     --blue-11: #8da4ef;
+    --green: #228b22;
     --red-destructive: #cd2b31;
     --red-contrast: #ffffff;
     --background: #111111;

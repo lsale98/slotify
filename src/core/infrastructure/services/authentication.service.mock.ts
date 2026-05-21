@@ -1,5 +1,3 @@
-// src/core/infrastructure/services/authentication.service.mock.ts
-
 import type { IAuthenticationService } from '@/core/application/services/authentication.service.interface';
 import type { Cookie } from '@/core/entities/models/cookie';
 import type { AppSession } from '@/core/entities/models/session';

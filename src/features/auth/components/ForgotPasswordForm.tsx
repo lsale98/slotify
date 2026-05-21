@@ -16,7 +16,7 @@ const ForgotPasswordForm = () => {
     <form action={formAction} className="flex flex-col gap-4">
       {state?.error && (
         <div
-          className="text-error-text bg-error-card rounded-md px-3 py-2 text-sm"
+          className="text-destructive text-sm"
           role="alert"
           aria-live="polite"
         >
@@ -24,10 +24,10 @@ const ForgotPasswordForm = () => {
         </div>
       )}
       {state.success && (
-        <p>
+        <div className="text-green text-sm" role="alert" aria-live="polite">
           Check your inbox - we&apos;ve sent a reset link if that email is
           registered.
-        </p>
+        </div>
       )}
       <Input
         name="email"

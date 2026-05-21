@@ -30,7 +30,7 @@ const SignUpForm = () => {
     <div className="flex w-full max-w-150 flex-col gap-6 rounded-2xl bg-white p-4 md:rounded-4xl md:p-8 lg:p-10">
       <div className="flex flex-col gap-1">
         <Typography element="h1" variant="h4">
-          Start your journey!
+          Start your journey as...
         </Typography>
       </div>
       <form action={formAction} className="flex flex-col gap-4">
@@ -51,9 +51,28 @@ const SignUpForm = () => {
             onValueChange: handleChange('role'),
           } as object)}
         >
-          <RadioGroup.Item value={RoleSchema.enum.USER}>User</RadioGroup.Item>
-          <RadioGroup.Item value={RoleSchema.enum.MENTOR}>
-            Mentor
+          <RadioGroup.Item value={RoleSchema.enum.USER} variant="card">
+            <div className="flex justify-between gap-2">
+              <div className="flex flex-col">
+                <Typography variant="p">User</Typography>
+                <Typography variant="muted">
+                  Learn, grow, and develop with the guidance of expert mentors
+                </Typography>
+              </div>
+              <RadioGroup.Indicator />
+            </div>
+          </RadioGroup.Item>
+          <RadioGroup.Item value={RoleSchema.enum.MENTOR} variant="card">
+            <div className="flex justify-between gap-2">
+              <div className="flex flex-col">
+                <Typography variant="p">Mentor</Typography>
+                <Typography variant="muted">
+                  Share your expertise and guide learners through their journey
+                  in your field
+                </Typography>
+              </div>
+              <RadioGroup.Indicator />
+            </div>
           </RadioGroup.Item>
         </RadioGroup>
         <Input
