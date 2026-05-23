@@ -13,6 +13,7 @@ const checkboxVariants = cva(
     'peer shrink-0 rounded',
     'border transition-all duration-150',
     'ring-offset-background',
+    'hover:cursor-pointer',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:cursor-not-allowed disabled:opacity-40',
     // Checked state

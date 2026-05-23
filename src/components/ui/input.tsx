@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 // ─── CVA Variants ─────────────────────────────────────────────────────────────
 
-export const inputVariants = cva(
+const inputVariants = cva(
   // Border živeo ovde pre — premešten na wrapper
   'flex h-9 w-full bg-transparent py-1 text-foreground text-xs shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
   {
@@ -30,7 +30,7 @@ export const inputVariants = cva(
 
 // Wrapper dobija border i focus-ring — jedino mesto za border
 export const inputWrapperVariants = cva(
-  'relative flex gap-1.5 items-center w-full rounded-md border transition-colors focus-within:ring-1 px-3',
+  'relative flex gap-1.5 items-center w-full rounded-md border transition-colors focus-within:ring-1',
   {
     variants: {
       variant: {
@@ -154,6 +154,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             inputWrapperVariants({ variant: resolvedVariant }),
             disabled && 'cursor-not-allowed opacity-50',
+            type === 'hidden' && 'hidden',
           )}
         >
           {leftAddon && (
@@ -186,7 +187,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               disabled={disabled}
-              className="text-muted-foreground hover:text-foreground absolute right-3 flex items-center transition-colors focus-visible:outline-none"
+              className="text-muted-foreground hover:bg-primary/10 focus-within:bg-primary/10 absolute right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:outline-none"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
@@ -258,4 +259,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input';
 
-export { Input };
+export { Input, inputVariants };
