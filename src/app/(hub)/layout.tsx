@@ -2,7 +2,7 @@ import { Role } from '@/core/entities/models/user';
 import { getClaims } from '@/lib/getClaims';
 import { redirect } from 'next/navigation';
 
-export default async function DashboardLayout({
+export default async function HubLayout({
   superadmin,
   mentor,
   user,

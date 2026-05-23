@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '@/lib/auth/validate-session';
 import { SESSION_COOKIE } from '../config';
 import { signClaims } from './lib/headerSigning';
+import { roleRoutes } from './lib/routes';
 
 const AUTH_ROUTES = [
   '/sign-in',
@@ -10,6 +11,8 @@ const AUTH_ROUTES = [
   '/forgot-password',
   '/reset-password',
 ];
+
+const PUBLIC_ROUTES = ['/', '/not-found'];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -51,6 +54,17 @@ export async function proxy(request: NextRequest) {
     });
     response.cookies.delete(SESSION_COOKIE);
     return response;
+  }
+
+  const isPublic = PUBLIC_ROUTES.some((r) =>
+    r === '/' ? pathname === '/' : pathname.startsWith(r),
+  );
+
+  const allowedRoutes = roleRoutes[session.role] ?? [];
+  const isAllowed = allowedRoutes.some((r) => pathname.startsWith(r));
+
+  if (!isAllowed && !isPublic) {
+    return NextResponse.rewrite(new URL('/not-found', request.url));
   }
 
   requestHeaders.set(
