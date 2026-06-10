@@ -16,7 +16,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-green: var(--green);
   --radius-md: var(--radius);
-
+  --color-sidebar-bg: var(--gray-3);
   --font-primary: var(--font-poppins);
   --font-secondary: var(--font-montserrat);
 }

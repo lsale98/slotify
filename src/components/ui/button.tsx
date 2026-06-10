@@ -94,9 +94,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading}
         {...props}
       >
-        {loading ? <Spinner /> : leftIcon}
-        {children}
-        {!loading && rightIcon}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {loading ? <Spinner /> : leftIcon}
+            {children}
+            {!loading && rightIcon}
+          </>
+        )}
       </Comp>
     );
   },

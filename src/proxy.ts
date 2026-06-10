@@ -61,7 +61,7 @@ export async function proxy(request: NextRequest) {
   );
 
   const allowedRoutes = roleRoutes[session.role] ?? [];
-  const isAllowed = allowedRoutes.some((r) => pathname.startsWith(r));
+  const isAllowed = allowedRoutes.some((r) => pathname.startsWith(r.href));
 
   if (!isAllowed && !isPublic) {
     return NextResponse.rewrite(new URL('/not-found', request.url));
