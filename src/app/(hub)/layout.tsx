@@ -1,19 +1,14 @@
 import { AppSidebar } from '@/components/layout/hub/AppSidebar';
+import { Container } from '@/components/ui/container';
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Role } from '@/core/entities/models/user';
-import SignOutButton from '@/features/auth/components/SignOutButton';
 import { getClaims } from '@/lib/getClaims';
-import { roleRoutes } from '@/lib/routes';
+import { getSidebarRoutes } from '@/lib/routes';
 import { redirect } from 'next/navigation';
-
-type NavLink = {
-  href: string;
-  label: string;
-};
 
 export default async function HubLayout({
   children,
@@ -23,14 +18,16 @@ export default async function HubLayout({
   const claims = await getClaims();
   if (!claims) redirect('/sign-in');
 
-  const links = roleRoutes[claims.role as Role] ?? [];
+  const routes = getSidebarRoutes(claims.role as Role) ?? [];
 
   return (
     <SidebarProvider>
-      <AppSidebar links={links} role={claims.role as Role} />
+      <AppSidebar links={routes} role={claims.role as Role} />
       <SidebarInset>
-        <header className="flex h-12 items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
+        <header className="flex h-12 items-center gap-2">
+          <Container variant="hub">
+            <SidebarTrigger />
+          </Container>
         </header>
         <main>{children}</main>
       </SidebarInset>

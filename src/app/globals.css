@@ -19,11 +19,13 @@
   --color-sidebar-bg: var(--gray-3);
   --font-primary: var(--font-poppins);
   --font-secondary: var(--font-montserrat);
+  --color-bg-avatar: var(--white);
 }
 
 @layer base {
   :root,
   .light {
+    --white: #fff;
     --gray-1: #fcfcfc;
     --gray-3: #f0f0f2;
     --gray-6: #d8d8db;
@@ -52,6 +54,7 @@
   }
 
   .dark {
+    --white: #fff;
     --gray-1: #111111;
     --gray-3: #222222;
     --gray-4: #2a2a2a;

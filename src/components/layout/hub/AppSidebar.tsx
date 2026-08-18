@@ -10,17 +10,15 @@ import {
   SidebarMenuItem,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
 } from '@/components/ui/sidebar';
 import { NavUser } from '@/components/nav-user';
 import { Typography } from '@/components/ui/typography';
-
-type NavLink = {
-  href: string;
-  label: string;
-};
+import { SectionRoutes } from '@/lib/routes';
+import Link from 'next/link';
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-  links: NavLink[];
+  links: SectionRoutes[];
   role: Role;
 };
 
@@ -41,20 +39,25 @@ export async function AppSidebar({ links, role, ...props }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          {/* <SidebarGroupLabel>Pages</SidebarGroupLabel> */}
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {links.map((link) => (
-                <SidebarMenuItem key={link.href}>
-                  <SidebarMenuButton asChild>
-                    <a href={link.href}>{link.label}</a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {links.map((section) => (
+          <SidebarGroup key={section.id}>
+            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.routes.map((link) => (
+                  <SidebarMenuItem key={link.href}>
+                    <SidebarMenuButton asChild>
+                      <Link href={link.href}>
+                        <link.icon />
+                        <span>{link.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

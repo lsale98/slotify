@@ -1,13 +1,7 @@
 'use client';
 
 import { User } from '@/core/entities/models/user';
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  Sparkles,
-} from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -27,6 +21,8 @@ import {
 } from '@/components/ui/sidebar';
 import SignOutButton from '@/features/auth/components/SignOutButton';
 import { getInitials } from '@/lib/utils';
+import { getDropdownRoutes } from '@/lib/routes';
+import Link from 'next/link';
 
 interface INavUserClient {
   user: User;
@@ -34,6 +30,9 @@ interface INavUserClient {
 
 export function NavUserClient({ user }: INavUserClient) {
   const { isMobile } = useSidebar();
+
+  const links = getDropdownRoutes(user.role) ?? [];
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -43,7 +42,7 @@ export function NavUserClient({ user }: INavUserClient) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="bg-bg-avatar h-8 w-8 rounded-lg">
                 <AvatarImage
                   src={user.avatarUrl || ''}
                   alt={`${user.name} ${user.lastname}`}
@@ -52,6 +51,7 @@ export function NavUserClient({ user }: INavUserClient) {
                   {getInitials(user.name, user.lastname)}
                 </AvatarFallback>
               </Avatar>
+
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{`${user.name} ${user.lastname}`}</span>
                 <span className="truncate text-xs">{user.email}</span>
@@ -67,7 +67,7 @@ export function NavUserClient({ user }: INavUserClient) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar className="bg-bg-avatar h-8 w-8 rounded-lg">
                   <AvatarImage
                     src={user.avatarUrl || ''}
                     alt={`${user.name} ${user.lastname}`}
@@ -83,27 +83,18 @@ export function NavUserClient({ user }: INavUserClient) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            {links.map((section) => (
+              <DropdownMenuGroup key={section.id}>
+                {section.routes.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link href={link.href}>
+                      <link.icon />
+                      <span>{link.label}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="mx-auto flex">
               <SignOutButton />

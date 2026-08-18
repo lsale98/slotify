@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@/features/user/queries/get-current-user';
-import NavUserClient from './nav-user-client';
+import NavUserClient from './nav-user.client';
 
 export async function NavUser() {
   const user = await getCurrentUser();

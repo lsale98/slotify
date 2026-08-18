@@ -7,9 +7,7 @@ export function createUsersModule() {
   const usersModule = createModule();
 
   if (process.env.NODE_ENV === 'test') {
-    usersModule
-      .bind(DI_SYMBOLS.IUsersRepository)
-      .toClass(MockUsersRepository, [DI_SYMBOLS.IRedisService]);
+    usersModule.bind(DI_SYMBOLS.IUsersRepository).toClass(MockUsersRepository);
   } else {
     usersModule
       .bind(DI_SYMBOLS.IUsersRepository)

@@ -1,3 +1,4 @@
+import { ISessionsRepository } from '@/core/application/repositories/sessions.repository.interface';
 import { IUsersRepository } from '@/core/application/repositories/users.repository.interface';
 import { IAuthenticationService } from '@/core/application/services/authentication.service.interface';
 import { ICrashReporterService } from '@/core/application/services/crash-reporter.service.interface';
@@ -11,12 +12,14 @@ import { IResetPasswordUseCase } from '@/core/application/use-cases/auth/reset-p
 import { ISignInUseCase } from '@/core/application/use-cases/auth/sign-in.use-case';
 import { ISignOutUseCase } from '@/core/application/use-cases/auth/sign-out.use-case';
 import { ISignUpUseCase } from '@/core/application/use-cases/auth/sign-up.use-case';
+import { IGetSessionsUseCase } from '@/core/application/use-cases/sessions/get-sessions.use-case';
 import { IActivateAccountController } from '@/core/interface-adapters/controllers/auth/activate-account.controller';
 import { IForgotPasswordController } from '@/core/interface-adapters/controllers/auth/forget-password.controller';
 import { IResetPasswordController } from '@/core/interface-adapters/controllers/auth/reset-password.controller';
 import { ISignInController } from '@/core/interface-adapters/controllers/auth/sign-in.controller';
 import { ISignOutController } from '@/core/interface-adapters/controllers/auth/sign-out.controller';
 import { ISignUpController } from '@/core/interface-adapters/controllers/auth/sign-up.controller';
+import { IGetSessionsController } from '@/core/interface-adapters/controllers/sessions/get-sessions.controller';
 
 export const DI_SYMBOLS = {
   // Services
@@ -29,6 +32,7 @@ export const DI_SYMBOLS = {
 
   // Repositories
   IUsersRepository: Symbol.for('IUsersRepository'),
+  ISessionsRepository: Symbol.for('ISessionsRepository'),
 
   // Use Cases
   ISignInUseCase: Symbol.for('ISignInUseCase'),
@@ -37,6 +41,7 @@ export const DI_SYMBOLS = {
   IActivateAccountUseCase: Symbol.for('IActivateAccountUseCase'),
   IForgotPasswordUseCase: Symbol.for('IForgotPasswordUseCase'),
   IResetPasswordUseCase: Symbol.for('IResetPasswordUseCase'),
+  IGetSessionsUseCase: Symbol.for('IGetSessionsUseCase'),
 
   // Controllers
   ISignInController: Symbol.for('ISignInController'),
@@ -45,6 +50,7 @@ export const DI_SYMBOLS = {
   IActivateAccountController: Symbol.for('IActivateAccountController'),
   IForgotPasswordController: Symbol.for('IForgotPasswordController'),
   IResetPasswordController: Symbol.for('IResetPasswordController'),
+  IGetSessionsController: Symbol.for('IGetSessionsController'),
 };
 
 export interface DI_RETURN_TYPES {
@@ -58,6 +64,7 @@ export interface DI_RETURN_TYPES {
 
   // Repositories
   IUsersRepository: IUsersRepository;
+  ISessionsRepository: ISessionsRepository;
 
   // Use Cases
   ISignInUseCase: ISignInUseCase;
@@ -66,6 +73,7 @@ export interface DI_RETURN_TYPES {
   IActivateAccountUseCase: IActivateAccountUseCase;
   IForgotPasswordUseCase: IForgotPasswordUseCase;
   IResetPasswordUseCase: IResetPasswordUseCase;
+  IGetSessionsUseCase: IGetSessionsUseCase;
 
   // Controllers
   ISignInController: ISignInController;
@@ -74,4 +82,5 @@ export interface DI_RETURN_TYPES {
   IActivateAccountController: IActivateAccountController;
   IForgotPasswordController: IForgotPasswordController;
   IResetPasswordController: IResetPasswordController;
+  IGetSessionsController: IGetSessionsController;
 }

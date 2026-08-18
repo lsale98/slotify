@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '@/lib/auth/validate-session';
 import { SESSION_COOKIE } from '../config';
 import { signClaims } from './lib/headerSigning';
-import { roleRoutes } from './lib/routes';
+import { getSidebarRoutes, getDropdownRoutes } from './lib/routes';
+import type { Role } from '@/core/entities/models/user';
 
 const AUTH_ROUTES = [
   '/sign-in',
@@ -10,69 +11,108 @@ const AUTH_ROUTES = [
   '/activate',
   '/forgot-password',
   '/reset-password',
-];
+] as const;
 
-const PUBLIC_ROUTES = ['/', '/not-found'];
+const PUBLIC_ROUTES = ['/', '/not-found'] as const;
 
-export async function proxy(request: NextRequest) {
+function isAuthRoute(pathname: string): boolean {
+  return AUTH_ROUTES.some((route) => pathname.startsWith(route));
+}
+
+function isPublicRoute(pathname: string): boolean {
+  return PUBLIC_ROUTES.some((route) =>
+    route === '/' ? pathname === '/' : pathname.startsWith(route),
+  );
+}
+
+function getAllowedHrefs(role: Role): string[] {
+  const sections = [...getSidebarRoutes(role), ...getDropdownRoutes(role)];
+
+  const hrefs = sections.flatMap((section) =>
+    section.routes.map((r) => r.href),
+  );
+
+  return [...new Set(hrefs)];
+}
+
+function isAllowedRoute(pathname: string, role: Role): boolean {
+  return getAllowedHrefs(role).some((href) => pathname.startsWith(href));
+}
+
+function sanitizeHeaders(headers: Headers): Headers {
+  const clean = new Headers(headers);
+  clean.delete('x-user-id');
+  clean.delete('x-user-role');
+  clean.delete('x-user-claims');
+  return clean;
+}
+
+function redirectTo(path: string, request: NextRequest): NextResponse {
+  return NextResponse.redirect(new URL(path, request.url));
+}
+
+function rewriteTo(
+  path: string,
+  request: NextRequest,
+  headers: Headers,
+): NextResponse {
+  return NextResponse.rewrite(new URL(path, request.url), {
+    request: { headers },
+  });
+}
+
+function nextWith(headers: Headers): NextResponse {
+  return NextResponse.next({ request: { headers } });
+}
+
+function clearSessionCookie(response: NextResponse): NextResponse {
+  response.cookies.delete(SESSION_COOKIE);
+  return response;
+}
+
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
   const sessionId = request.cookies.get(SESSION_COOKIE)?.value;
-  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
+  const headers = sanitizeHeaders(request.headers);
 
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.delete('x-user-id');
-  requestHeaders.delete('x-user-role');
-  requestHeaders.delete('x-user-claims');
-
-  if (isAuthRoute) {
+  if (isAuthRoute(pathname)) {
     if (!sessionId) {
-      return NextResponse.next({ request: { headers: requestHeaders } });
+      return nextWith(headers);
     }
 
     const session = await validateSession(sessionId);
 
     if (!session) {
-      const response = NextResponse.next({
-        request: { headers: requestHeaders },
-      });
-      response.cookies.delete(SESSION_COOKIE);
-      return response;
+      return clearSessionCookie(nextWith(headers));
     }
 
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return redirectTo('/dashboard', request);
+  }
+
+  if (isPublicRoute(pathname)) {
+    return nextWith(headers);
   }
 
   if (!sessionId) {
-    return NextResponse.next({ request: { headers: requestHeaders } });
+    return redirectTo('/sign-in', request);
   }
 
   const session = await validateSession(sessionId);
 
   if (!session) {
-    const response = NextResponse.next({
-      request: { headers: requestHeaders },
-    });
-    response.cookies.delete(SESSION_COOKIE);
-    return response;
+    return clearSessionCookie(redirectTo('/sign-in', request));
   }
 
-  const isPublic = PUBLIC_ROUTES.some((r) =>
-    r === '/' ? pathname === '/' : pathname.startsWith(r),
-  );
-
-  const allowedRoutes = roleRoutes[session.role] ?? [];
-  const isAllowed = allowedRoutes.some((r) => pathname.startsWith(r.href));
-
-  if (!isAllowed && !isPublic) {
-    return NextResponse.rewrite(new URL('/not-found', request.url));
+  if (!isAllowedRoute(pathname, session.role)) {
+    return rewriteTo('/not-found', request, headers);
   }
 
-  requestHeaders.set(
+  headers.set(
     'x-user-claims',
     signClaims({ userId: session.userId, role: session.role }),
   );
 
-  return NextResponse.next({ request: { headers: requestHeaders } });
+  return nextWith(headers);
 }
 
 export const config = {

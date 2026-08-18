@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MentorSchema } from './mentor';
 
 export const RoleSchema = z.enum([
   'SUPERADMIN',
@@ -16,7 +17,7 @@ export const StatusSchema = z.enum([
 ]);
 
 export const UserSchema = z.object({
-  id: z.cuid(),
+  id: z.cuid2(),
   email: z.email(),
   name: z.string(),
   lastname: z.string(),
@@ -28,6 +29,8 @@ export const UserSchema = z.object({
   agreedTerms: z.boolean().default(true),
   createdAt: z.date(),
   updatedAt: z.date(),
+
+  mentorProfile: MentorSchema.nullable().optional(),
 });
 
 export const createUserSchema = UserSchema.pick({

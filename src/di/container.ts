@@ -7,6 +7,7 @@ import { IInstrumentationService } from '@/core/application/services/instrumenta
 import { createMonitoringModule } from './modules/monitoring.module';
 import { createRedisModule } from './modules/redis.module';
 import { createResendModule } from './modules/resend.module';
+import { createSessionsModule } from './modules/sessions.module';
 
 const ApplicationContainer = createContainer();
 
@@ -21,6 +22,7 @@ ApplicationContainer.load(
   createAuthenticationModule(),
 );
 ApplicationContainer.load(Symbol('UsersModule'), createUsersModule());
+ApplicationContainer.load(Symbol('SessionsModule'), createSessionsModule());
 ApplicationContainer.load(Symbol('ResendModule'), createResendModule());
 
 export function getInjection<K extends keyof typeof DI_SYMBOLS>(

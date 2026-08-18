@@ -3,7 +3,7 @@ import { UserSchema } from './user';
 
 export const SessionSchema = z.object({
   id: z.string(),
-  userId: z.cuid(),
+  userId: z.cuid2(),
   expiresAt: z.date(),
   userAgent: z.string().nullable(),
   ipAddress: z
